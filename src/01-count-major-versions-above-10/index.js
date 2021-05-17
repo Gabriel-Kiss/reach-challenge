@@ -28,9 +28,13 @@ The results should have this structure:
  *  the number of packages that have a MAJOR semver version 
  *  greater than 10.x.x
  */
+const fetchData = require('../index');
 
-module.exports = async function countMajorVersionsAbove10() {
+module.exports = async function countMajorVersionsAbove10 () {
   // TODO
-
-  return count
+  const data = await fetchData();
+  const result = data.map(el => el.package.version)
+    .filter(el => el.split('.')[0] * 1 > 10)
+    .length
+  return result;
 };

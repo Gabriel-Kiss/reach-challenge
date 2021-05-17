@@ -28,8 +28,16 @@ The results should have this structure:
  *  the "name" of the package that has the oldest "date" value
  */
 
-module.exports = async function oldestPackageName() {
-  // TODO
+const fetchData = require('../index')
 
+module.exports = async function oldestPackageName () {
+  //get data from api call using fetchData function
+  const data = await fetchData();
+  //sort packages by date in ascending order from oldest date to most recent  
+  const sortedByDate = data.sort((a, b) => new Date(a.package.date) - new Date(b.package.date));
+  //retrieve the name of the first element in the array 
+  const name = sortedByDate[0].package.name;
+  //return name 
   return name
 };
+

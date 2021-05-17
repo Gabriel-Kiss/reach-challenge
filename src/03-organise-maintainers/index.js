@@ -39,8 +39,34 @@ The results should have this structure:
  * be in alphabetical order.
  */
 
-module.exports = async function organiseMaintainers() {
-  // TODO
+const fetchData = require('../index');
 
+module.exports = async function organiseMaintainers () {
+  // TODO
+  //declare empty array which will hold the final result
+  const maintainers = [];
+  //retrieve data from api using fetchData function
+  const data = await fetchData();
+  //extract all maintainers, remove duplicates and sort alphabetically
+  const allMaintainers = [... new Set(data.map(el => el.package.maintainers).flat().map(el => el.username))].sort();
+  //for each maintainer check what packages they appear in
+  allMaintainers.forEach(element => {
+    //create an obj on each iteration with the required data
+    const obj = {
+      username: element,
+      packageNames: []
+    }
+    data.forEach(el => {
+      for (item of el.package.maintainers) {
+        if (item.username === element) obj.packageNames.push(el.package.name);
+      }
+    }
+    )
+    //sort packageNames alphabetically
+    obj.packageNames.sort();
+    //push final obj to maintainers array
+    maintainers.push(obj);
+  })
   return maintainers
 };
+
